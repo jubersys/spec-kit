@@ -193,6 +193,7 @@ class TestClineIntegration(MarkdownIntegrationTests):
                 "create-new-feature.sh",
                 "setup-plan.sh",
                 "setup-tasks.sh",
+                "sonar.sh",
             ]:
                 files.append(f".specify/scripts/bash/{name}")
         else:
@@ -202,6 +203,7 @@ class TestClineIntegration(MarkdownIntegrationTests):
                 "create-new-feature.ps1",
                 "setup-plan.ps1",
                 "setup-tasks.ps1",
+                "sonar.ps1",
             ]:
                 files.append(f".specify/scripts/powershell/{name}")
 

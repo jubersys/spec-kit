@@ -38,7 +38,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If missing, guide user to configure
 
 2. **Run analysis**:
-   - Execute `sonar-scanner` with project config
+   - Execute `{SCRIPT}` with project config
    - Parse results for quality gate status
 
 3. **Generate report**:

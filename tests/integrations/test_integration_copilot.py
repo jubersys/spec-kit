@@ -166,10 +166,10 @@ class TestCopilotIntegration:
         agents_dir = tmp_path / ".github" / "agents"
         assert agents_dir.is_dir()
         agent_files = sorted(agents_dir.glob("speckit.*.agent.md"))
-        assert len(agent_files) == 10
+        assert len(agent_files) == 11
         expected_commands = {
             "analyze", "clarify", "constitution", "converge", "implement",
-            "plan", "checklist", "specify", "tasks", "taskstoissues",
+            "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
         }
         actual_commands = {f.name.removeprefix("speckit.").removesuffix(".agent.md") for f in agent_files}
         assert actual_commands == expected_commands
@@ -279,6 +279,7 @@ class TestCopilotIntegration:
             ".github/agents/speckit.specify.agent.md",
             ".github/agents/speckit.tasks.agent.md",
             ".github/agents/speckit.taskstoissues.agent.md",
+            ".github/agents/speckit.sonar.agent.md",
             ".github/prompts/speckit.analyze.prompt.md",
             ".github/prompts/speckit.checklist.prompt.md",
             ".github/prompts/speckit.clarify.prompt.md",
@@ -289,6 +290,7 @@ class TestCopilotIntegration:
             ".github/prompts/speckit.specify.prompt.md",
             ".github/prompts/speckit.tasks.prompt.md",
             ".github/prompts/speckit.taskstoissues.prompt.md",
+            ".github/prompts/speckit.sonar.prompt.md",
             ".vscode/settings.json",
             ".specify/integration.json",
             ".specify/init-options.json",
@@ -299,6 +301,7 @@ class TestCopilotIntegration:
             ".specify/scripts/bash/create-new-feature.sh",
             ".specify/scripts/bash/setup-plan.sh",
             ".specify/scripts/bash/setup-tasks.sh",
+            ".specify/scripts/bash/sonar.sh",
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",
             ".specify/templates/plan-template.md",
@@ -341,6 +344,7 @@ class TestCopilotIntegration:
             ".github/agents/speckit.specify.agent.md",
             ".github/agents/speckit.tasks.agent.md",
             ".github/agents/speckit.taskstoissues.agent.md",
+            ".github/agents/speckit.sonar.agent.md",
             ".github/prompts/speckit.analyze.prompt.md",
             ".github/prompts/speckit.checklist.prompt.md",
             ".github/prompts/speckit.clarify.prompt.md",
@@ -351,6 +355,7 @@ class TestCopilotIntegration:
             ".github/prompts/speckit.specify.prompt.md",
             ".github/prompts/speckit.tasks.prompt.md",
             ".github/prompts/speckit.taskstoissues.prompt.md",
+            ".github/prompts/speckit.sonar.prompt.md",
             ".vscode/settings.json",
             ".specify/integration.json",
             ".specify/init-options.json",
@@ -361,6 +366,7 @@ class TestCopilotIntegration:
             ".specify/scripts/powershell/create-new-feature.ps1",
             ".specify/scripts/powershell/setup-plan.ps1",
             ".specify/scripts/powershell/setup-tasks.ps1",
+            ".specify/scripts/powershell/sonar.ps1",
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",
             ".specify/templates/plan-template.md",
@@ -427,7 +433,7 @@ class TestCopilotSkillsMode:
 
     _SKILL_COMMANDS = [
         "analyze", "clarify", "constitution", "converge", "implement",
-        "plan", "checklist", "specify", "tasks", "taskstoissues",
+        "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
     ]
 
     def _make_copilot(self):
@@ -783,6 +789,7 @@ class TestCopilotSkillsMode:
             ".specify/scripts/bash/create-new-feature.sh",
             ".specify/scripts/bash/setup-plan.sh",
             ".specify/scripts/bash/setup-tasks.sh",
+            ".specify/scripts/bash/sonar.sh",
             # Templates
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",

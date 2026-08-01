@@ -220,7 +220,7 @@ class MarkdownIntegrationTests:
 
     COMMAND_STEMS = [
         "analyze", "clarify", "constitution", "converge", "implement",
-        "plan", "checklist", "specify", "tasks", "taskstoissues",
+        "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
     ]
 
     def _expected_files(self, script_variant: str) -> list[str]:
@@ -241,11 +241,11 @@ class MarkdownIntegrationTests:
 
         if script_variant == "sh":
             for name in ["check-prerequisites.sh", "common.sh", "create-new-feature.sh",
-                         "setup-plan.sh", "setup-tasks.sh"]:
+                         "setup-plan.sh", "setup-tasks.sh", "sonar.sh"]:
                 files.append(f".specify/scripts/bash/{name}")
         else:
             for name in ["check-prerequisites.ps1", "common.ps1", "create-new-feature.ps1",
-                         "setup-plan.ps1", "setup-tasks.ps1"]:
+                         "setup-plan.ps1", "setup-tasks.ps1", "sonar.ps1"]:
                 files.append(f".specify/scripts/powershell/{name}")
 
         for name in ["checklist-template.md",

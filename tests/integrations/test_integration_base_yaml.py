@@ -385,6 +385,7 @@ class YamlIntegrationTests:
         "specify",
         "tasks",
         "taskstoissues",
+        "sonar",
     ]
 
     def _expected_files(self, script_variant: str) -> list[str]:
@@ -410,6 +411,7 @@ class YamlIntegrationTests:
                 "create-new-feature.sh",
                 "setup-plan.sh",
                 "setup-tasks.sh",
+                "sonar.sh",
             ]:
                 files.append(f".specify/scripts/bash/{name}")
         else:
@@ -419,6 +421,7 @@ class YamlIntegrationTests:
                 "create-new-feature.ps1",
                 "setup-plan.ps1",
                 "setup-tasks.ps1",
+                "sonar.ps1",
             ]:
                 files.append(f".specify/scripts/powershell/{name}")
 

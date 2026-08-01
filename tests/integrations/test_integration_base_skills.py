@@ -95,7 +95,7 @@ class SkillsIntegrationTests:
 
         expected_commands = {
             "analyze", "clarify", "constitution", "converge", "implement",
-            "plan", "checklist", "specify", "tasks", "taskstoissues",
+            "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
         }
 
         # Derive command names from the skill directory names
@@ -381,7 +381,7 @@ class SkillsIntegrationTests:
 
     _SKILL_COMMANDS = [
         "analyze", "clarify", "constitution", "converge", "implement",
-        "plan", "checklist", "specify", "tasks", "taskstoissues",
+        "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
     ]
 
     def _expected_files(self, script_variant: str) -> list[str]:
@@ -410,6 +410,7 @@ class SkillsIntegrationTests:
                 ".specify/scripts/bash/create-new-feature.sh",
                 ".specify/scripts/bash/setup-plan.sh",
                 ".specify/scripts/bash/setup-tasks.sh",
+                ".specify/scripts/bash/sonar.sh",
             ]
         else:
             files += [
@@ -418,6 +419,7 @@ class SkillsIntegrationTests:
                 ".specify/scripts/powershell/create-new-feature.ps1",
                 ".specify/scripts/powershell/setup-plan.ps1",
                 ".specify/scripts/powershell/setup-tasks.ps1",
+                ".specify/scripts/powershell/sonar.ps1",
             ]
         # Templates
         files += [
