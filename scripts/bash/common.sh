@@ -395,6 +395,76 @@ json_escape() {
     done
 }
 
+# Load environment variables from .env files in the project root.
+# Load order (later overrides earlier):
+#   1. .env.example - defaults/comments
+#   2. .env - committed config
+#   3. .env.local - local overrides (should be gitignored)
+#
+# Actual environment variables (set in shell) always take precedence.
+load_env_file() {
+    local repo_root
+    repo_root=$(get_repo_root)
+    
+    # Capture initial environment to preserve shell-set vars
+    local initial_env
+    initial_env=$(env | cut -d= -f1 | sort -u)
+    
+    for env_file in ".env.example" ".env" ".env.local"; do
+        local env_path="$repo_root/$env_file"
+        if [[ -f "$env_path" ]]; then
+            # Read file line by line, only set if not in initial env
+            while IFS= read -r line; do
+                line="${line%%#*}"  # Strip comments
+                line="${line%% }"   # Trim trailing space
+                line="${line## }"   # Trim leading space
+                [[ -z "$line" ]] && continue
+                if [[ "$line" == *=* ]]; then
+                    local key="${line%%=*}"
+                    key="${key%% }"
+                    key="${key## }"
+                    # Only set if not already in initial environment
+                    if ! printf '%s\n' "$initial_env" | grep -q "^${key}$"; then
+                        local value="${line#*=}"
+                        value="${value%% }"
+                        value="${value## }"
+                        # Remove surrounding quotes
+                        if [[ "$value" == \"*\" ]] && [[ "$value" == *\" ]]; then
+                            value="${value:1:-1}"
+                        elif [[ "$value" == \'*\' ]] && [[ "$value" == *\' ]]; then
+                            value="${value:1:-1}"
+                        fi
+                        export "$key=$value"
+                    fi
+                fi
+            done < "$env_path"
+        fi
+    done
+}
+
+# Helper to output JSON error
+error_json() {
+    local msg="$1"
+    local json_mode="${JSON_MODE:-false}"
+    if [[ "$json_mode" == "true" ]]; then
+        printf '{"error":"%s","exit_code":2}\n' "$(json_escape "$msg")"
+    else
+        echo "ERROR: $msg" >&2
+    fi
+}
+
+# Helper to output JSON result
+output_json() {
+    local quality_gate="$1"
+    local issues_json="$2"
+    local json_mode="${JSON_MODE:-false}"
+    
+    if [[ "$json_mode" == "true" ]]; then
+        printf '{"quality_gate":"%s","issues":%s,"exit_code":%d}\n' \
+            "$quality_gate" "$issues_json" $([[ "$quality_gate" == "PASSED" ]] && echo 0 || echo 1)
+    fi
+}
+
 check_file() { [[ -f "$1" ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
 check_dir() { [[ -d "$1" && -n $(ls -A "$1" 2>/dev/null) ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
 

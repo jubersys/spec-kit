@@ -184,6 +184,9 @@ shell_quote() {
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+# Load environment variables from .env files
+load_env_file
+
 REPO_ROOT=$(get_repo_root) || exit 1
 
 cd "$REPO_ROOT"

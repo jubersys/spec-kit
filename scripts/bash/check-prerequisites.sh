@@ -78,6 +78,9 @@ done
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+# Load environment variables from .env files
+load_env_file
+
 # Get feature paths.
 # In --paths-only mode this is pure resolution, so pass --no-persist to opt out
 # of the feature.json write side effect (issue #3025).

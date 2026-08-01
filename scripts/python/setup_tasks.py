@@ -13,6 +13,7 @@ try:
         format_speckit_command,
         get_feature_paths,
         resolve_template,
+        load_env_file,
     )
 except ImportError:  # pragma: no cover - direct execution from unusual cwd
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -21,6 +22,7 @@ except ImportError:  # pragma: no cover - direct execution from unusual cwd
         format_speckit_command,
         get_feature_paths,
         resolve_template,
+        load_env_file,
     )
 
 
@@ -66,6 +68,9 @@ def _check_dir(path: Path, description: str) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Load environment variables from .env files
+    load_env_file()
+    
     json_mode = False
     for arg in list(argv if argv is not None else sys.argv[1:]):
         if arg == "--json":

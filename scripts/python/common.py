@@ -291,3 +291,50 @@ def format_speckit_command(command_name: str, repo_root: Path) -> str:
         name = name[len("speckit-") :]
     name = name.replace(".", separator)
     return f"/speckit{separator}{name}"
+
+
+def load_env_file(repo_root: Path | None = None) -> None:
+    """Load environment variables from .env files in the project root.
+    
+    Load order (later overrides earlier):
+      1. .env.example - defaults/comments
+      2. .env - committed config
+      3. .env.local - local overrides (should be gitignored)
+    
+    Actual environment variables (set in shell) always take precedence.
+    """
+    if repo_root is None:
+        repo_root = find_specify_root()
+    if repo_root is None:
+        return
+    
+    # Capture initial environment state to preserve shell-set vars
+    initial_env = set(os.environ.keys())
+    
+    for env_name in [".env.example", ".env", ".env.local"]:
+        env_path = repo_root / env_name
+        if env_path.is_file():
+            _load_env_file(env_path, initial_env)
+
+
+def _load_env_file(env_path: Path, initial_env: set[str]) -> None:
+    """Load a single .env file into os.environ."""
+    try:
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            # Handle KEY=VALUE format
+            if "=" in line:
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                # Remove surrounding quotes if present
+                if (value.startswith('"') and value.endswith('"')) or \
+                   (value.startswith("'") and value.endswith("'")):
+                    value = value[1:-1]
+                # Allow .env files to override each other, but not shell-set vars
+                if key not in initial_env:
+                    os.environ[key] = value
+    except Exception:
+        pass  # Silently ignore .env parsing errors

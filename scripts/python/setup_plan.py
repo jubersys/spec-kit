@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 
 try:
-    from common import get_feature_paths, resolve_template
+    from common import get_feature_paths, resolve_template, load_env_file
 except ImportError:  # pragma: no cover - direct execution from unusual cwd
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from common import get_feature_paths, resolve_template
+    from common import get_feature_paths, resolve_template, load_env_file
 
 
 def _json_line(payload: object) -> str:
@@ -27,6 +27,9 @@ def _help_text(argv0: str) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Load environment variables from .env files
+    load_env_file()
+    
     args = list(argv if argv is not None else sys.argv[1:])
     json_mode = False
     for arg in args:

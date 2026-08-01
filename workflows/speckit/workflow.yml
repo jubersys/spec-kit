@@ -1,10 +1,10 @@
 schema_version: "1.0"
 workflow:
   id: "speckit"
-  name: "Full SDD Cycle"
-  version: "1.0.0"
+  name: "Full SDD Cycle with SonarQube"
+  version: "1.1.0"
   author: "GitHub"
-  description: "Runs specify → plan → tasks → implement with review gates"
+  description: "Runs specify → plan → tasks → implement with SonarQube quality gate loop"
 
 requires:
   # 0.8.5 is the first release with engine-side resolution of the
@@ -76,3 +76,32 @@ steps:
     integration: "{{ inputs.integration }}"
     input:
       args: "{{ inputs.spec }}"
+
+  # === SONAR QUALITY GATE LOOP (conditional on SONAR_ENABLED env var) ===
+  - id: sonar_loop
+    type: while
+    condition: "{{ env.SONAR_ENABLED == 'true' }}"
+    max_iterations: 5
+    steps:
+      - id: sonar_check
+        command: speckit.sonar
+        integration: "{{ inputs.integration }}"
+        input:
+          args: ""
+
+      - id: sonar_gate
+        type: gate
+        message: |
+          SonarQube Quality Gate: {{ steps.sonar_check.output.quality_gate }}
+          Issues: {{ steps.sonar_check.output.issues.bugs }} bugs, {{ steps.sonar_check.output.issues.vulnerabilities }} vulns, {{ steps.sonar_check.output.issues.code_smells }} smells
+          Coverage: {{ steps.sonar_check.output.issues.coverage }}%
+          Duplication: {{ steps.sonar_check.output.issues.duplication }}%
+          
+          How to proceed?
+        options: 
+          - "fix_auto"     # Agent auto-fixes code issues (consults constitution.md)
+          - "fix_manual"   # User guides fix for business/constitution decisions
+          - "skip"         # Skip this issue (with warning)
+          - "abort"        # Stop implementation
+        on_reject: abort
+        condition: "{{ steps.sonar_check.output.quality_gate != 'PASSED' }}"

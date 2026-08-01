@@ -184,6 +184,9 @@ def _build_namespace(context: Any) -> dict[str, Any]:
     run_id = getattr(context, "run_id", None) or ""
     workflow_dir = getattr(context, "workflow_dir", None) or ""
     ns["context"] = {"run_id": run_id, "workflow_dir": workflow_dir}
+    # Environment variables for use in workflow expressions (e.g., {{ env.SONAR_ENABLED }})
+    import os
+    ns["env"] = dict(os.environ)
     return ns
 
 
