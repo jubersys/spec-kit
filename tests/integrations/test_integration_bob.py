@@ -246,7 +246,7 @@ class TestBobDefaultSkillsMode:
 
         expected_commands = {
             "analyze", "clarify", "constitution", "converge", "implement",
-            "plan", "checklist", "specify", "tasks", "taskstoissues",
+            "plan", "checklist", "specify", "tasks", "taskstoissues", "sonar",
         }
         actual_commands = {f.parent.name.removeprefix("speckit-") for f in created}
         assert actual_commands == expected_commands

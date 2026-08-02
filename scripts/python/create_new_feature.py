@@ -13,10 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 try:
-    from common import get_repo_root, persist_feature_json, resolve_template
+    from common import get_repo_root, persist_feature_json, resolve_template, load_env_file
 except ImportError:  # pragma: no cover - direct execution from unusual cwd
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from common import get_repo_root, persist_feature_json, resolve_template
+    from common import get_repo_root, persist_feature_json, resolve_template, load_env_file
 
 
 def _json_line(payload: object) -> str:
@@ -242,6 +242,9 @@ def _has_spec_prefix_conflict(
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Load environment variables from .env files
+    load_env_file()
+    
     argv0 = sys.argv[0]
     args = _parse_args(list(argv if argv is not None else sys.argv[1:]), argv0)
 

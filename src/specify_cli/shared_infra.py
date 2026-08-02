@@ -618,6 +618,25 @@ def install_shared_infra(
         _write_shared_text(project_path, dst, content)
         manifest.record_existing(rel)
 
+    # Copy .env.example from core_pack root to project root
+    if core_pack and (core_pack / ".env.example").is_file():
+        env_example_src = core_pack / ".env.example"
+        env_example_dst = project_path / ".env.example"
+        rel = env_example_dst.relative_to(project_path).as_posix()
+        seen_rels.add(rel)
+        if _safe_dest_or_bucket(env_example_dst, rel):
+            write, bucket = _decide_overwrite(rel, env_example_dst)
+            if write:
+                if not _ensure_or_bucket_dir(env_example_dst.parent):
+                    pass
+                else:
+                    content = env_example_src.read_text(encoding="utf-8")
+                    planned_templates.append((env_example_dst, rel, content))
+
+    for dst, rel, content in planned_templates:
+        _write_shared_text(project_path, dst, content)
+        manifest.record_existing(rel)
+
     if skipped_files:
         console.print(
             f"[yellow]⚠[/yellow]  {len(skipped_files)} shared infrastructure path(s) already exist and were not updated:"

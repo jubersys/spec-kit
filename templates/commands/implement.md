@@ -166,10 +166,28 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
 
 9. Completion validation:
-   - Verify all required tasks are completed
-   - Check that implemented features match the original specification
-   - Validate that tests pass and coverage meets requirements
-   - Confirm the implementation follows the technical plan
+    - Verify all required tasks are completed
+    - Check that implemented features match the original specification
+    - Validate that tests pass and coverage meets requirements
+    - Confirm the implementation follows the technical plan
+
+10. **SonarQube Quality Gate Loop** (if enabled):
+    
+    If `SONAR_ENABLED=true` is set in `.env` (checked via `load_env_file`):
+    
+    a. Run `speckit.sonar` command after implementation completes
+    b. If Quality Gate PASSED: Continue to completion validation
+    c. If Quality Gate FAILED:
+       - Present issues to user/agent
+       - Options:
+         * **fix_auto**: Agent auto-fixes code issues (consults `constitution.md` for standards)
+         * **fix_manual**: User guides fix for business/constitution decisions
+         * **skip**: Skip this issue (with warning)
+         * **abort**: Stop implementation
+       - If auto-fix: Agent fixes issues and loop repeats (max 5 iterations)
+       - If manual fix: User provides guidance, agent re-implements, loop repeats
+    
+    This ensures code quality standards are met before marking implementation complete.
 
 Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `__SPECKIT_COMMAND_TASKS__` first to regenerate the task list.
 
