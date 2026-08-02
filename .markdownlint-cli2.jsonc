@@ -24,6 +24,13 @@
     "MD060": false
   },
   "ignores": [
-    ".genreleases/"
+    ".genreleases/",
+    ".env.example",
+    "scripts/bash/sonar.sh",
+    "scripts/powershell/sonar.ps1",
+    "scripts/python/sonar.py",
+    "workflows/speckit/workflow.yml",
+    "scripts/bash/common.sh",
+    "scripts/python/common.py"
   ]
 }
